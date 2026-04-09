@@ -1,0 +1,341 @@
+Multi-Agent Systems: Agents as Tools
+This tutorial introduces multi-agent systems—one of the most powerful patterns in AI agent development. You'll learn how to create specialized agents that work together, with one agent orchestrating others as tools.
+
+What Are Multi-Agent Systems?
+A multi-agent system is a collection of agents that collaborate to solve complex problems. Instead of one agent doing everything, you create:
+
+Specialized agents - Each focused on a specific domain or task
+An orchestrator agent - Coordinates the specialists and combines their outputs
+This pattern is powerful because:
+
+Separation of concerns - Each agent has a clear, focused role
+Modularity - Easy to add, remove, or modify specialists
+Better performance - Specialized agents have optimized prompts for their domain
+Scalability - Add more specialists as your system grows
+The "Agents as Tools" Pattern
+In LangChain, you can use agents as tools by wrapping them with the @tool decorator. This means:
+
+An agent can call another agent as if it were a regular tool
+The orchestrator agent sees specialist agents in its tool list
+The orchestrator automatically decides when to use each specialist
+This creates a hierarchy: Orchestrator → Specialist Agents → Tools
+
+What You'll Build
+You'll create a travel planning system with:
+
+Logistics Agent - Handles practical details (costs, times, routes)
+Recommendations Agent - Suggests experiences (attractions, restaurants, activities)
+Orchestrator Agent - Coordinates both specialists to create complete trip plans
+Prerequisites
+Before starting, make sure you have:
+
+Python 3.10+ installed
+OpenRouter API key (get one free at https://openrouter.ai)
+Completed Tutorials 01 & 02 - You should understand agent creation and tools
+First time? See Tutorial 01 for detailed instructions on installing Python, setting up a virtual environment, and creating your API key.
+
+Quick Setup Checklist
+If you haven't set up yet, here's the short version:
+
+Install Python 3.10+: Download from python.org — verify with python3 --version
+Create a virtual environment: python3 -m venv venv && source venv/bin/activate
+Get an OpenRouter API key: Sign up at openrouter.ai → Keys → Create Key
+Create a .env file in the project root: touch .env, then add OPENROUTER_API_KEY=your-key-here
+Setup Environment
+Make sure you have a .env file in the project root with your API key:
+
+OPENROUTER_API_KEY=your-api-key-here
+If you completed the previous tutorials, you should already have this set up!
+
+Installation
+Install the required dependencies directly. This cell is self-contained—no external requirements.txt needed.
+
+%pip install langchain langchain-openai python-dotenv --quiet
+Setup
+Import the necessary libraries. Notice we're importing the tool decorator—we'll use it to convert agents into tools.
+
+The model configuration uses standard settings:
+
+max_tokens: 1000 - Sufficient for travel planning responses
+temperature: 0.7 - Balanced creativity for generating engaging travel recommendations
+All agents in this system will share the same model configuration, but each will have a specialized system prompt.
+
+import os
+from dotenv import load_dotenv
+from langchain.agents import create_agent
+from langchain_openai import ChatOpenAI
+from langchain.tools import tool
+from langchain_core.messages import HumanMessage
+
+# Load environment variables from .env file
+load_dotenv()
+
+# Configure OpenRouter model
+model = ChatOpenAI(
+    api_key=os.getenv("OPENROUTER_API_KEY"),
+    base_url="https://openrouter.ai/api/v1",
+    model="gpt-4o-mini",
+    temperature=0.7,
+    max_tokens=1000,
+)
+Scenario: Travel Planning System
+We'll build a practical multi-agent system for travel planning. This is an excellent example because:
+
+Clear separation - Logistics and recommendations are naturally different domains
+Complementary skills - Both are needed for a complete trip plan
+Real-world relevance - Similar systems are used in travel apps and services
+System Architecture
+Our system will have three agents:
+
+Logistics Agent - Handles the "how" and "how much":
+
+Calculate distances and travel times
+Estimate costs (transportation, accommodation, activities)
+Optimize routes and suggest efficient itineraries
+Consider practical constraints (time zones, weather)
+Recommendations Agent - Handles the "what" and "where":
+
+Suggest top attractions and landmarks
+Recommend restaurants and local cuisine
+Suggest cultural activities and events
+Provide local insights and hidden gems
+Orchestrator Agent - Coordinates everything:
+
+Receives the user's travel request
+Calls logistics agent for practical details
+Calls recommendations agent for experiences
+Combines both into a comprehensive plan
+Why This Architecture?
+This design demonstrates:
+
+Domain specialization - Each agent is an expert in its area
+Parallel processing - Both specialists can work on the same trip
+Composability - The orchestrator combines their outputs
+Extensibility - Easy to add more specialists (e.g., weather agent, booking agent)
+Create Specialized Agents
+First, we'll create the specialist agents. Each has a focused system prompt that defines its expertise and style.
+
+Notice how each prompt:
+
+Defines a clear role and domain
+Lists specific capabilities
+Sets the tone and style of responses
+Keeps responses focused and concise
+Let's create our specialists:
+
+# Create specialized logistics planning agent
+logistics_agent = create_agent(
+    model=model,
+    system_prompt="""You are a travel logistics expert. You handle practical travel planning:
+    - Calculate distances between locations and travel times
+    - Estimate costs for transportation, accommodation, and activities
+    - Optimize routes and suggest efficient itineraries
+    - Consider time zones, weather, and practical constraints
+    Always provide short, clear, practical logistics information."""
+)
+
+# Create specialized recommendations agent
+recommendations_agent = create_agent(
+    model=model,
+    system_prompt="""You are a travel recommendations specialist. You suggest experiences and activities:
+    - Recommend top attractions, landmarks, and must-see places
+    - Suggest restaurants, local cuisine, and dining experiences
+    - Recommend cultural activities, events, and local experiences
+    - Provide insights about local customs, best times to visit, and hidden gems
+    Always provide brief, engaging, personalized recommendations."""
+)
+Convert Agents to Tools
+Now comes the key step: converting our specialist agents into tools that the orchestrator can use.
+
+How It Works
+The @tool decorator wraps a function that calls an agent. When the orchestrator sees these tools:
+
+It can call them just like regular tools
+The tool function invokes the specialist agent
+The agent's response is returned as the tool's output
+The orchestrator receives the specialist's answer
+Design Pattern
+Each tool function:
+
+Takes a natural language description of the task
+Formats it appropriately for the specialist agent
+Calls the agent with the formatted request
+Returns the agent's response
+This pattern allows the orchestrator to:
+
+See specialist agents in its tool list
+Decide when to use each specialist
+Pass context and requirements to specialists
+Receive specialized responses
+Let's create the tool wrappers:
+
+@tool
+def plan_logistics_agent(trip_request: str) -> str:
+    """
+    Plan travel logistics including distances, times, costs, and routes.
+    Use this to calculate practical travel information and optimize itineraries.
+    
+    Args:
+        trip_request: Trip details (e.g., "3 days in Paris, budget $1500, from London")
+    
+    Returns:
+        Logistics information: distances, travel times, costs, and route suggestions
+    """
+    response = logistics_agent.invoke({"messages": [HumanMessage(f"Plan logistics for this trip: {trip_request}")]})
+    return response["messages"][-1].content
+
+@tool
+def get_recommendations_agent(trip_details: str) -> str:
+    """
+    Get travel recommendations for attractions, restaurants, and activities.
+    Use this to suggest what to see, do, and eat at the destination.
+    
+    Args:
+        trip_details: Destination and trip information (e.g., "3 days in Paris, interested in art and food")
+    
+    Returns:
+        Recommendations for attractions, restaurants, activities, and cultural insights
+    """
+    response = recommendations_agent.invoke({"messages": [HumanMessage(f"Provide recommendations for: {trip_details}")]})
+    return response["messages"][-1].content
+Create Orchestrator Agent
+Now we'll create the orchestrator—the agent that coordinates everything. This is where the magic happens!
+
+Orchestrator Design
+The orchestrator:
+
+Has access to both specialist tools - Can call logistics or recommendations agents
+Receives user requests - Gets the original travel planning question
+Decides which specialists to use - Determines what information is needed
+Combines outputs - Synthesizes specialist responses into a complete answer
+System Prompt Strategy
+The orchestrator's system prompt:
+
+Defines coordination role - "travel planning coordinator"
+Explains available tools - What each specialist does
+Guides workflow - When to use each specialist
+Sets expectations - Combine both practical and exciting information
+The Power of This Pattern
+When a user asks: "Plan a 3-day trip to Rome from London with a $2000 budget..."
+
+The orchestrator:
+
+Recognizes it needs both logistics AND recommendations
+Calls plan_logistics_agent with budget and travel details
+Calls get_recommendations_agent with destination and interests
+Combines both responses into a comprehensive plan
+All of this happens automatically—the orchestrator figures out the workflow!
+
+Let's create the orchestrator:
+
+orchestrator = create_agent(
+    model=model,
+    system_prompt="""You are a travel planning coordinator. 
+    When planning trips, use both specialists:
+    1. Use plan_logistics_agent to calculate practical details: distances, times, costs, and routes
+    2. Use get_recommendations_agent to suggest attractions, restaurants, and activities
+    Always combine both the practical logistics and exciting recommendations in your final response.""",
+    tools=[plan_logistics_agent, get_recommendations_agent]
+)
+Test the Multi-Agent System
+Now let's test our multi-agent system! Watch how the orchestrator:
+
+Recognizes complexity - Understands when multiple specialists are needed
+Coordinates calls - Decides which agents to call and in what order
+Synthesizes responses - Combines specialist outputs into coherent answers
+Handles variations - Adapts to different types of travel questions
+Understanding Multi-Agent Orchestration
+When you ask a question:
+
+Orchestrator analyzes what information is needed
+Orchestrator plans which specialists to call (logistics? recommendations? both?)
+Specialists execute their specialized tasks
+Orchestrator receives specialist responses
+Orchestrator synthesizes everything into a final answer
+This is more sophisticated than single-agent tool use—the orchestrator is managing other intelligent agents!
+
+Test Scenarios
+We'll test three different scenarios:
+
+Complete trip planning - Requires both logistics and recommendations
+Multi-city itinerary - Tests coordination across multiple destinations
+Weekend getaway - Tests focused planning with budget constraints
+Each demonstrates different orchestration patterns and shows how the system adapts to different needs.
+
+# Test 1: City trip planning - uses both agents
+response = orchestrator.invoke({"messages": [HumanMessage("Plan a 3-day trip to Rome. I'm coming from London with a budget of $2000. Calculate travel costs and time, and suggest must-see attractions and restaurants.")]})
+print(response["messages"][-1].content)
+# Test 2: Multi-city itinerary - both agents work together
+response = orchestrator.invoke({"messages": [HumanMessage("I want to visit Paris, Amsterdam, and Berlin in 7 days starting from New York. Plan the logistics (flights, trains, costs) and recommend top 3 things to do in each city.")]})
+print(response["messages"][-1].content)
+# Test 3: Weekend getaway - comprehensive planning
+response = orchestrator.invoke({"messages": [HumanMessage("Plan a weekend trip to Barcelona from Madrid. Budget is $500. Calculate travel time and costs, and suggest the best places to visit, eat, and experience local culture.")]})
+print(response["messages"][-1].content)
+What You've Learned
+Congratulations! You've built a complete multi-agent system. Here's what we covered:
+
+✅ Multi-agent architecture - How to design systems with specialized agents
+✅ Agents as tools - Converting agents into tools using the @tool decorator
+✅ Orchestration patterns - How orchestrators coordinate specialists
+✅ System design - Creating modular, extensible agent systems
+✅ Real-world application - Building a practical travel planning system
+
+Key Benefits
+The "Agents as Tools" pattern provides:
+
+Separation of concerns - Each agent specializes in one domain, making the system easier to understand and maintain
+Modularity - Easy to add, remove, or modify specialized agents without affecting others
+Better performance - Specialized agents have optimized prompts for their domain, leading to better results
+Scalability - Add more specialized agents as your system grows
+Intelligent routing - The orchestrator automatically decides which specialists to use
+The orchestrator intelligently routes questions to the appropriate specialist, creating a powerful multi-agent system that's more capable than any single agent alone.
+
+How Multi-Agent Systems Work
+When you ask a complex question:
+
+The orchestrator analyzes what information is needed
+It identifies which specialists can help (logistics? recommendations? both?)
+It calls specialist agents as tools, passing relevant context
+Specialists execute their specialized tasks
+The orchestrator receives specialist responses
+It synthesizes all responses into a coherent final answer
+This creates a hierarchy: User → Orchestrator → Specialist Agents → Tools
+
+Design Patterns You've Seen
+Specialist Pattern - Create focused agents for specific domains
+Orchestrator Pattern - One agent coordinates multiple specialists
+Agents as Tools Pattern - Wrap agents with @tool to make them callable
+Composition Pattern - Combine specialist outputs into comprehensive answers
+These patterns are reusable across many multi-agent applications!
+
+Best Practices for Multi-Agent Systems
+When building multi-agent systems:
+
+Clear specialization - Each agent should have a distinct, focused role
+Well-defined interfaces - Tool wrappers should have clear inputs/outputs
+Good system prompts - Orchestrator needs to understand when to use each specialist
+Test incrementally - Verify each specialist works before building the orchestrator
+Start simple - Begin with 2-3 specialists, add more as needed
+Extending This System
+You could enhance this travel planning system by:
+
+Adding more specialists - Weather agent, booking agent, budget optimizer
+Creating hierarchies - Sub-orchestrators for specific regions or trip types
+Adding tools to specialists - Give logistics agent access to real-time price APIs
+Implementing memory - Let agents remember user preferences across sessions
+Adding validation - Create a review agent that checks plans for issues
+Next Steps
+Now that you understand multi-agent systems, you're ready to:
+
+Manage resources (Tutorial 04) - Track costs across multiple agents
+Build your own system - Apply these patterns to your domain
+Experiment with architectures - Try different orchestration patterns
+Experiment
+Try these modifications:
+
+Add a new specialist - Create a weather agent or local events agent
+Modify orchestration - Change when the orchestrator calls each specialist
+Create sub-systems - Build a regional orchestrator that coordinates city-specific agents
+Add tool chaining - Let specialists use tools in addition to their knowledge
+The more you experiment, the better you'll understand how to design effective multi-agent systems!
+

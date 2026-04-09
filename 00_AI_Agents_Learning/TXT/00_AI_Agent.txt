@@ -1,0 +1,175 @@
+AI Agent Creation with LangChain
+This tutorial introduces you to creating AI agents using the LangChain framework. By the end, you'll understand what agents are, how they work, and how to build your first one.
+
+What is an AI Agent?
+An AI agent is a system that can:
+
+Perceive its environment through inputs (like your questions or data)
+Reason about what actions to take to achieve a goal
+Act to produce outputs or interact with tools
+Unlike simple programs that follow fixed instructions, agents can adapt their behavior based on context and goals. They're powered by Large Language Models (LLMs) that enable them to understand natural language and make decisions.
+
+Think of an agent as a smart assistant that doesn't just respond to questions, but can also:
+
+Use tools to perform actions (like searching the web, running code, or accessing APIs)
+Remember context from previous interactions
+Break down complex tasks into steps
+What You'll Learn
+In this tutorial, you'll:
+
+Set up the environment and connect to a language model via OpenRouter
+Create a basic agent with a custom system prompt
+Test the agent and understand how it responds
+This is the foundation—later tutorials will show you how to add tools, create multi-agent systems, and manage resources.
+
+Prerequisites
+Before starting, make sure you have:
+
+Python 3.10+ installed (see below)
+OpenRouter API key (get one free at https://openrouter.ai)
+Basic Python knowledge (variables, functions, imports)
+Installing Python
+If you don't have Python 3.10+ installed:
+
+macOS: brew install python (requires Homebrew) or download from python.org
+Windows: Download the installer from python.org — check "Add Python to PATH" during setup
+Linux: sudo apt install python3 python3-pip (Ubuntu/Debian) or sudo dnf install python3 (Fedora)
+Verify with: python3 --version
+
+Virtual Environment (Recommended)
+A virtual environment isolates your project's packages from other Python projects, avoiding version conflicts:
+
+python3 -m venv venv
+source venv/bin/activate      # macOS/Linux
+# venv\Scripts\activate       # Windows
+You'll see (venv) in your terminal when active. Run deactivate to exit.
+
+Getting an OpenRouter API Key
+Go to openrouter.ai and click Sign Up (free account)
+Once logged in, go to Keys in the left sidebar
+Click Create Key, give it a name, and copy the generated key
+Keep this key safe — you'll need it in the next step
+Setup Environment
+To keep your API key secure, we'll store it in a .env file that won't be committed to version control.
+
+Create a .env file in the project root directory (same folder as this notebook):
+
+OPENROUTER_API_KEY=your-api-key-here
+Replace your-api-key-here with the key you copied from OpenRouter.
+
+What is a .env file? It's a plain text file that stores configuration values. The name starts with a dot, which makes it hidden on macOS/Linux. You can create it with any text editor, or from the terminal: touch .env then edit it. It keeps sensitive credentials separate from your code, making it safer to share your notebooks.
+
+Installation
+Install the required Python packages directly. This cell is self-contained—no external requirements.txt needed:
+
+langchain - The agent framework we'll be using
+langchain-openai - Integration for OpenAI-compatible APIs (including OpenRouter)
+python-dotenv - For loading environment variables from .env files
+%pip install langchain langchain-openai python-dotenv --quiet
+Setup
+Now we'll import the necessary libraries and configure our language model. Let's break down what each part does:
+
+Understanding the Components
+create_agent - The main function from LangChain that creates and manages AI agents
+ChatOpenAI - A class that connects to language models via OpenRouter (which provides access to various LLMs through an OpenAI-compatible API)
+HumanMessage - A message class for user inputs
+load_dotenv() - Loads environment variables from your .env file
+Model Configuration
+The ChatOpenAI is configured with:
+
+api_key - Your OpenRouter API key (loaded securely from .env)
+base_url - The OpenRouter API endpoint
+model - Which language model to use (gpt-4o-mini is a good balance of capability and cost)
+temperature - Controls randomness (0.7 = balanced creativity and consistency)
+max_tokens - Maximum length of the response (1000 tokens ≈ 750 words)
+What is OpenRouter? It's a service that provides unified access to multiple LLM providers (OpenAI, Anthropic, etc.) through a single API, making it easy to switch between models.
+
+import os
+from dotenv import load_dotenv
+from langchain.agents import create_agent
+from langchain_openai import ChatOpenAI
+from langchain_core.messages import HumanMessage
+
+# Load environment variables from .env file
+load_dotenv()
+
+# Configure OpenRouter model
+# IMPORTANT: API key is loaded from .env file (see .env.example)
+model = ChatOpenAI(
+    api_key=os.getenv("OPENROUTER_API_KEY"),
+    base_url="https://openrouter.ai/api/v1",
+    model="gpt-4o-mini",
+    temperature=0.7,
+    max_tokens=1000,
+)
+Create Agent
+Now we'll create our first AI agent! The create_agent function takes two key parameters:
+
+Key Parameters
+model - The language model we configured earlier. This is the "brain" of the agent.
+
+system_prompt - This is crucial! It defines:
+
+The agent's role (what it is)
+The agent's behavior (how it should act)
+The agent's style (tone, format, etc.)
+The system prompt acts like a job description or personality for your agent. A well-crafted prompt can dramatically improve the agent's responses.
+
+In this example, we're creating a helpful assistant that provides clear, concise answers. You can customize this to create agents for specific purposes:
+
+A coding tutor: "You are a patient programming instructor..."
+A data analyst: "You are a data science expert who explains findings clearly..."
+A creative writer: "You are a creative writing assistant with a playful style..."
+Pro tip: The system prompt is one of the most powerful ways to control agent behavior. Small changes can lead to very different outputs!
+
+agent = create_agent(
+    model=model,
+    system_prompt="You are a helpful AI assistant that provides clear and concise answers."
+)
+Test Agent
+Let's test our agent! When you call the agent with a question, here's what happens behind the scenes:
+
+Your question is sent to the language model along with the system prompt
+The model processes both the system prompt (defining the agent's role) and your question
+The model generates a response based on its training and the context provided
+The response is returned to you
+Try running the cell below. Notice how the agent:
+
+Provides a clear, structured answer
+Uses the style defined in the system prompt ("clear and concise")
+Can handle complex topics and break them down
+Try modifying the question to see how the agent adapts to different types of queries. You can ask about:
+
+Technical concepts
+General knowledge
+Problem-solving scenarios
+What's happening? The agent doesn't have any tools yet—it's just using the language model's knowledge. In the next tutorial, we'll add tools that let the agent perform actions beyond just generating text.
+
+response = agent.invoke({"messages": [HumanMessage("What is machine learning?")]})
+print(response["messages"][-1].content)
+What You've Learned
+Congratulations! You've created your first AI agent. Here's what we covered:
+
+✅ What agents are - Systems that perceive, reason, and act
+✅ How to set up - Connecting to language models via OpenRouter
+✅ How to create an agent - Using the create_agent function with a model and system prompt
+✅ How to test - Interacting with your agent and getting responses
+
+Key Takeaways
+System prompts matter - They define your agent's personality and behavior
+Agents are flexible - The same agent can handle different types of questions
+Foundation is important - Understanding these basics prepares you for more advanced features
+Next Steps
+Now that you have a working agent, you're ready to:
+
+Add tools (Tutorial 02) - Give your agent the ability to perform actions like calculations, API calls, or data processing
+Create multi-agent systems (Tutorial 03) - Combine specialized agents that work together
+Manage resources (Tutorial 04) - Track token usage and costs
+Experiment
+Try modifying the system prompt to see how it changes the agent's behavior:
+
+Make it more formal or casual
+Change the role (e.g., "You are a technical expert..." vs "You are a friendly teacher...")
+Add specific instructions about format or style
+The more you experiment, the better you'll understand how to craft effective agents!
+
