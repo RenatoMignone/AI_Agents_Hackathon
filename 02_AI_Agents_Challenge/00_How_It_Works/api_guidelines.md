@@ -53,7 +53,7 @@ model = ChatOpenAI(
     api_key=os.getenv("OPENROUTER_API_KEY"),
     base_url="https://openrouter.ai/api/v1",
     model=model_id,
-    temperature=0.7,
+    temperature=0.1,  # Set low for deterministic classification
     max_tokens=1000,
 )
 ```

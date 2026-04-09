@@ -32,7 +32,19 @@ Notes: [what changed from previous attempt, observations, what worked/did not]
 
 ## Submissions
 
-(add entries below as you run them)
+**Example Entry**
+```
+Level: 1
+Dataset type: training
+Date: 2026-04-10 14:00
+Session ID: teamname-01HXYZ123ABC456DEF789GHI
+Model used: meta-llama/llama-3.1-8b-instruct
+Score received: 85.5
+Citizens flagged: IAFGUHCK, XHYZ1234
+Notes: Baseline run using simple prompt. Flagged two citizens with escalating EnvironmentalExposureLevel correctly, missed one with declining SleepQualityIndex. Need to update prompt to emphasize sleep metrics.
+```
+
+(add real entries below as you run them)
 
 ---
 

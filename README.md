@@ -40,9 +40,10 @@ AI_Agents_Reply_Challenge/
   .gitignore                     - Excludes .env, .venv, __pycache__, build artifacts
   .venv/                         - Root virtual environment (created by 'make setup')
 
-  .setup/                        - Environment setup scripts and dependency manifest
+  .scripts/                      - Environment setup scripts and dependency manifest
     requirements.txt             - All Python dependencies for the entire project
     check_setup.py               - Verifies imports and .env credentials (run via 'make check')
+    utils.py                     - Shared data loader utility for parsing dataset schemas
 
   00_AI_Agents_Learning/         - Tutorial notebooks (start here if new to the stack)
     README.md                    - Setup, credential config, notebook order
@@ -87,7 +88,7 @@ AI_Agents_Reply_Challenge/
 make
 ```
 
-This creates the root `.venv/`, installs all dependencies from `.setup/requirements.txt`, and registers the Jupyter kernel.
+This creates the root `.venv/`, installs all dependencies from `.scripts/requirements.txt`, and registers the Jupyter kernel.
 
 **Then configure credentials:**
 

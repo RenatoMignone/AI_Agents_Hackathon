@@ -22,7 +22,7 @@ JUPYTER     := $(VENV)/bin/jupyter
 # -----------------------------------------------------------------------
 setup: $(VENV)/bin/activate
 
-$(VENV)/bin/activate: .setup/requirements.txt
+$(VENV)/bin/activate: .scripts/requirements.txt
 	@echo ""
 	@echo "--- Reply AI Agent Challenge 2026 - Environment Setup ---"
 	@echo ""
@@ -30,9 +30,9 @@ $(VENV)/bin/activate: .setup/requirements.txt
 	@echo ""
 	@echo "Step 1/3: Creating virtual environment at $(VENV)/ ..."
 	@$(PYTHON) -m venv $(VENV)
-	@echo "Step 2/3: Installing dependencies from .setup/requirements.txt ..."
+	@echo "Step 2/3: Installing dependencies from .scripts/requirements.txt ..."
 	@$(PIP) install --upgrade pip --quiet
-	@$(PIP) install -r .setup/requirements.txt --quiet
+	@$(PIP) install -r .scripts/requirements.txt --quiet
 	@echo "Step 3/3: Registering Jupyter kernel (reply-challenge) ..."
 	@$(PYTHON_VENV) -m ipykernel install --user --name=reply-challenge --display-name "Reply Challenge 2026"
 	@touch $(VENV)/bin/activate
@@ -53,7 +53,7 @@ check:
 	@echo ""
 	@echo "--- Environment Check ---"
 	@echo ""
-	@$(PYTHON_VENV) .setup/check_setup.py
+	@$(PYTHON_VENV) .scripts/check_setup.py
 
 # -----------------------------------------------------------------------
 # jupyter: launch Jupyter Lab in the learning notebooks folder

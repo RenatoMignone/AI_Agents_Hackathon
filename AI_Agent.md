@@ -35,9 +35,13 @@ AI_Agents_Reply_Challenge/
   .gitignore                   - Excludes .env, .venv, build artifacts
   .venv/                       - Optional root virtual environment
 
+  .scripts/                    - Environment setup scripts
+    requirements.txt           - All Python dependencies for the entire project
+    check_setup.py             - Verifies imports and .env credentials (run via 'make check')
+    utils.py                   - Shared data loader utility for parsing dataset schemas
+
   00_AI_Agents_Learning/       - Tutorial notebooks, learn the stack before building
     README.md                  - Setup instructions, notebook order, credential configuration
-    .env                       - API keys and Langfuse credentials (not committed)
     .venv/                     - Local virtual environment for the learning section
     Notebooks/                 - Four Jupyter notebooks, run in order
     TXT/                       - Original instructions used to generate the notebooks

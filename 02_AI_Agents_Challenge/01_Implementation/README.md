@@ -6,15 +6,37 @@ It is currently empty. Create your solution files here during the challenge.
 
 ---
 
+## Architecture Blueprint
+
+Based on sandbox training, here is the intended LangGraph architecture to implement:
+
+```mermaid
+graph TD
+    A[Main: load data] -->|invoke| B(Orchestrator Agent)
+    B -->|route: analyze_history| C[Data Analyst Tool/Agent]
+    B -->|route: check_baseline| D[Anomaly Engine Tool/Agent]
+    C --> B
+    D --> B
+    B -->|route: finalize| E((Decision Node))
+    E --> F[Write Output .txt]
+```
+
+**Key components:**
+- **Model:** `meta-llama/llama-3.1-8b-instruct` (or whichever proved best in sandbox)
+- **Temperature:** `0.1`
+- **Pattern:** ReAct orchestrator breaking down the task, calling a pure Python `compare_baseline()` tool to compare the `personas.md` text against the `status.csv` metrics.
+
+---
+
 ## Suggested structure
 
 ```
 01_Implementation/
-  README.md           - This file (update with your architecture and run instructions)
-  main.py             - Entry point: loads data, runs agents, writes output file
-  agent.py            - Agent and model initialization
-  tools.py            - Tool functions used by the agents
-  utils.py            - Data loading, parsing, and output formatting helpers
+  README.md           - Architecture notes and run instructions
+  main.py             - Entry point: LangGraph compile(), input feeding, output writing
+  graph.py            - LangGraph node definitions and edge routing
+  tools.py            - Analysis tools (e.g. bio-index trend calculator)
+  utils.py            - (Symlink or copy of .scripts/utils.py for dataset loading)
 ```
 
 Credentials: use the root .env file (one level above 02_AI_Agents_Challenge). Do not create a local .env here.
