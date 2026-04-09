@@ -1,4 +1,4 @@
-# AI Agents — Reply Code Challenge 2025
+# AI Agents - Reply Code Challenge 2026
 
 This repository contains the full learning path and challenge materials for the **Reply Code Challenge 2025 — AI Agents** track.
 
@@ -66,12 +66,12 @@ jupyter notebook Notebooks/
 
 The `00_AI_Agents_Learning` section contains **four progressive tutorials**:
 
-| # | Notebook | Concepts |
-|---|----------|----------|
-| 01 | Basic Agent Creation | LangChain, OpenRouter, system prompts |
-| 02 | Tools & Function Calling | `@tool` decorator, automatic tool selection |
-| 03 | Multi-Agent Systems | Orchestrator pattern, "Agents as Tools" |
-| 04 | Resource Management | Langfuse tracing, session IDs, cost tracking |
+| #   | Notebook                 | Concepts                                     |
+| --- | ------------------------ | -------------------------------------------- |
+| 01  | Basic Agent Creation     | LangChain, OpenRouter, system prompts        |
+| 02  | Tools & Function Calling | `@tool` decorator, automatic tool selection  |
+| 03  | Multi-Agent Systems      | Orchestrator pattern, "Agents as Tools"      |
+| 04  | Resource Management      | Langfuse tracing, session IDs, cost tracking |
 
 See [`00_AI_Agents_Learning/README.md`](00_AI_Agents_Learning/README.md) for full setup and usage instructions.
 
@@ -79,15 +79,15 @@ See [`00_AI_Agents_Learning/README.md`](00_AI_Agents_Learning/README.md) for ful
 
 ## 🔧 Tech Stack
 
-| Library | Purpose |
-|---------|---------|
-| [LangChain](https://python.langchain.com/) | Agent framework and tool abstractions |
-| [LangGraph](https://langchain-ai.github.io/langgraph/) | ReAct agent execution engine |
-| [langchain-openai](https://python.langchain.com/docs/integrations/chat/openai/) | OpenAI-compatible model connector |
-| [OpenRouter](https://openrouter.ai/) | Unified LLM API gateway |
-| [Langfuse](https://langfuse.com/) | Observability: token tracking, cost monitoring |
-| [ulid-py](https://github.com/mdomke/python-ulid) | Unique session ID generation |
-| [python-dotenv](https://github.com/theskumar/python-dotenv) | `.env` file loading |
+| Library                                                                         | Purpose                                        |
+| ------------------------------------------------------------------------------- | ---------------------------------------------- |
+| [LangChain](https://python.langchain.com/)                                      | Agent framework and tool abstractions          |
+| [LangGraph](https://langchain-ai.github.io/langgraph/)                          | ReAct agent execution engine                   |
+| [langchain-openai](https://python.langchain.com/docs/integrations/chat/openai/) | OpenAI-compatible model connector              |
+| [OpenRouter](https://openrouter.ai/)                                            | Unified LLM API gateway                        |
+| [Langfuse](https://langfuse.com/)                                               | Observability: token tracking, cost monitoring |
+| [ulid-py](https://github.com/mdomke/python-ulid)                                | Unique session ID generation                   |
+| [python-dotenv](https://github.com/theskumar/python-dotenv)                     | `.env` file loading                            |
 
 ---
 
