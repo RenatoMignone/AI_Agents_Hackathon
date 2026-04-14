@@ -13,6 +13,8 @@ For context on the overall repository, see the root README.md or AI_Agent.md.
   README.md            - This file
   00_How_It_Works/     - Official rules, API integration guide, and model reference
     README.md          - Competition rules, timeline, scoring criteria, prizes, submission format
+    submission_guide.md - Challenge-day fast path (generation, validation, upload sequence)
+    challenge_day_checklist.md - 60-second final pre-submit checks
     api_guidelines.md  - Langfuse integration code, env setup, trace viewer helper, best practices
     model_whitelist.md - All whitelisted OpenRouter model IDs as a lookup table
   01_Implementation/   - Write your challenge day solution here
@@ -27,6 +29,8 @@ For context on the overall repository, see the root README.md or AI_Agent.md.
 
 Contains the complete reference documentation extracted from the official challenge pages.
 Read 00_How_It_Works/README.md for rules, timeline, scoring, and submission format.
+Read 00_How_It_Works/submission_guide.md for challenge-day execution flow and failure playbook.
+Read 00_How_It_Works/challenge_day_checklist.md immediately before final upload.
 Read 00_How_It_Works/api_guidelines.md for all Langfuse integration code and patterns.
 Read 00_How_It_Works/model_whitelist.md when you need to choose a model by its OpenRouter ID.
 

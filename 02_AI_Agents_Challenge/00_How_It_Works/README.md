@@ -44,6 +44,8 @@ Problem statement, LLM API key (via OpenRouter), training and eval datasets, tok
 
 - Full API and Langfuse integration guide: [api_guidelines.md](api_guidelines.md)
 - All whitelisted models with OpenRouter IDs: [model_whitelist.md](model_whitelist.md)
+- Challenge-day submission fast path and pitfalls: [submission_guide.md](submission_guide.md)
+- 60-second final submission checks: [challenge_day_checklist.md](challenge_day_checklist.md)
 
 ---
 
@@ -69,6 +71,8 @@ Sandbox mode: practice simulation before challenge day. Shows per-submission sco
 
 All metrics benchmarked against an optimal reference solution. Outperforming it earns bonus points. More complex datasets have higher maximum points.
 
+Discord clarification (2026-04-14, organizers): scoring is weighted across multiple criteria and benchmarked against an optimal reference. Bonus credit may be awarded for outperforming benchmark targets.
+
 | Category | Metric | Notes |
 |----------|--------|-------|
 | Detection quality | Count-based accuracy | Every transaction weighted equally |
@@ -76,6 +80,11 @@ All metrics benchmarked against an optimal reference solution. Outperforming it 
 | System performance | Cost | LLM usage sustainability |
 | System performance | Latency | Transaction processing speed |
 | System performance | Agent architecture quality | Multi-agent system design |
+
+Practical implication for implementation strategy:
+- Do not optimize only for raw detection output quality.
+- Actively trade off quality, LLM cost, latency, and architecture clarity.
+- Prioritize strong performance on higher-difficulty datasets because they have higher maximum points.
 
 ---
 

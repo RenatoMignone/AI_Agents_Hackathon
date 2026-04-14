@@ -23,7 +23,14 @@ Dataset type: [training / evaluation]
 Date: YYYY-MM-DD HH:MM
 Session ID: {TEAM_NAME}-{ULID}
 Model used: openrouter model ID
+Prompt/version tag: [short id, e.g. p3-review-on]
+Review mode: [off / uncertain-only / disagreement+uncertain]
+Temperature: [e.g. 0.0, 0.1]
+Data source: [Public_Levels / Submission_Levels]
 Score received: [value shown on platform]
+Latency (total run): [seconds, if measured]
+Estimated cost: [from Langfuse trace info, if available]
+Fallback count: [0+]
 Citizens flagged: [list of user_ids flagged in output]
 Notes: [what changed from previous attempt, observations, what worked/did not]
 ```

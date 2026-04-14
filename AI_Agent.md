@@ -20,7 +20,13 @@ The task is to identify which citizens are exhibiting anomalous behavior pattern
 The solution must be an agentic AI system where the LLM is the core decision-maker and orchestrator.
 Purely deterministic or rule-based solutions are disqualified.
 Every submission requires a Langfuse session ID for cost tracking and validation.
-The score is based on output files only - Langfuse tracks costs but does not affect the score.
+
+Discord clarification (challenge-day scoring, shared by organizers):
+- Scoring is multi-criteria and weighted, not single-metric.
+- Detection quality includes both count-based accuracy and economic accuracy.
+- System performance includes cost, latency, and agent architecture quality.
+- Metrics are benchmarked against an optimal reference; outperforming benchmark may earn bonus credit.
+- More complex datasets carry higher maximum points.
 
 ---
 
@@ -60,6 +66,8 @@ AI_Agents_Reply_Challenge/
     README.md                  - Overview of this folder's contents
     00_How_It_Works/           - Official rules, scoring, and API integration reference
       README.md                - Competition rules, timeline, datasets, scoring, prizes
+      submission_guide.md      - Challenge-day submission workflow, pitfalls, quick commands
+      challenge_day_checklist.md - 60-second go/no-go checklist before final submit
       api_guidelines.md        - Langfuse integration code, env setup, best practices
       model_whitelist.md       - All ~200 whitelisted OpenRouter model IDs in a lookup table
     01_Implementation/         - Your actual challenge solution code goes here
@@ -78,6 +86,8 @@ Then load only the README.md of the subfolder that is relevant to your current t
 - If you are learning the stack or setting up dependencies: read 00_AI_Agents_Learning/README.md
 - If you are building or testing a sandbox solution: read 01_AI_Agents_Training/README.md, then 01_AI_Agents_Training/GUIDE.md
 - If you are preparing for or working on the real challenge: read 02_AI_Agents_Challenge/00_How_It_Works/README.md
+- For challenge-day submission workflow and pitfalls: read 02_AI_Agents_Challenge/00_How_It_Works/submission_guide.md
+- For final pre-submit go/no-go checks: read 02_AI_Agents_Challenge/00_How_It_Works/challenge_day_checklist.md
 - If you need the Langfuse integration code: read 02_AI_Agents_Challenge/00_How_It_Works/api_guidelines.md
 - If you need a model ID for ChatOpenAI: read 02_AI_Agents_Challenge/00_How_It_Works/model_whitelist.md
 
@@ -96,6 +106,50 @@ Do not read the problem statement PDF directly unless you have confirmed you nee
 7. No credits in sandbox mode: use only free OpenRouter models during training.
 8. The LLM must make decisions. A rule-based wrapper around the LLM with no real reasoning is not valid.
 9. Python 3.14 is incompatible with Langfuse. Use Python 3.10 through 3.13.
+10. Final challenge scoring is weighted across detection quality and system performance; optimize for both quality and efficiency.
+11. Evaluation outputs must be generated from evaluation/submission datasets, not from public training datasets.
+12. Ignore __MACOSX extraction artifacts when loading datasets.
+
+---
+
+## Challenge-day rapid context (minimal load)
+
+For fastest startup under token pressure, load only these files first:
+
+1. AI_Agent.md
+2. 02_AI_Agents_Challenge/00_How_It_Works/README.md
+3. 02_AI_Agents_Challenge/00_How_It_Works/submission_guide.md
+4. 02_AI_Agents_Challenge/00_How_It_Works/challenge_day_checklist.md (before final upload)
+
+Then load additional files only if blocked.
+
+---
+
+## Challenge-day execution timeline (recommended)
+
+- T+00 to T+30 min: validate env, run one end-to-end smoke test, verify Session ID and output format.
+- T+30 to T+180 min: iterate on datasets 1-3 in training mode; optimize prompt/model config with tracked experiments.
+- T+180 to T+300 min: lock architecture and run final generation for evaluation outputs.
+- T+300 to T+360 min: perform checklist-based final upload sequence; avoid last-minute architecture changes.
+
+---
+
+## Optimization mandate for future AI agents
+
+During challenge execution, optimize for the weighted scoring criteria communicated by organizers:
+
+1. Detection quality (count-based accuracy and economic accuracy).
+2. System performance (cost, latency, agent architecture quality).
+3. Benchmark outperformance bonus potential.
+4. Dataset difficulty weighting (higher complexity datasets can yield higher points).
+
+Operational policy:
+
+- Do not optimize only for raw detection count metrics.
+- Prefer configurations that improve quality-per-cost and quality-per-latency.
+- Use compact prompts by default; escalate to richer context only for uncertain cases.
+- Keep the architecture explainable and clearly agentic (LLM as core decision-maker).
+- Track each experiment with model, prompt version, review mode, score, cost, and latency.
 
 ---
 

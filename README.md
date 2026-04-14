@@ -64,6 +64,8 @@ AI_Agents_Reply_Challenge/
     README.md                    - Contents overview for this folder
     00_How_It_Works/             - Official rules, API docs, and model reference
       README.md                  - Competition rules, timeline, scoring, prizes
+      submission_guide.md        - Challenge-day fast path: generation, validation, upload order
+      challenge_day_checklist.md - 60-second pre-submit go/no-go checklist
       api_guidelines.md          - Langfuse integration code and best practices
       model_whitelist.md         - All whitelisted OpenRouter model IDs
     01_Implementation/           - Write your challenge day solution here
@@ -140,6 +142,8 @@ Every submission requires three elements: a Langfuse session ID, a UTF-8 output 
 Training submissions are unlimited and show a score each time. Evaluation submissions are one per dataset and cannot be re-submitted.
 
 See 02_AI_Agents_Challenge/00_How_It_Works/README.md for the full rules, scoring breakdown, prizes, and submission format.
+For rapid challenge-day operations, use 02_AI_Agents_Challenge/00_How_It_Works/submission_guide.md and
+02_AI_Agents_Challenge/00_How_It_Works/challenge_day_checklist.md.
 
 ---
 
@@ -173,6 +177,12 @@ See 02_AI_Agents_Challenge/00_How_It_Works/README.md for the full rules, scoring
 Never commit the .env file. It is excluded by .gitignore.
 API keys and Langfuse credentials must be kept private at all times.
 The .venv directories are also excluded from version control.
+
+Challenge-day credential hygiene:
+
+- Rotate any key that was exposed during testing or screenshots.
+- Validate that source zips contain `.env.example` only (never real `.env`).
+- Keep a fallback plan for rapid key rotation before final one-shot evaluation uploads.
 
 To set up credentials: copy .env.example to .env in the repository root and fill in your values.
 All scripts and notebooks use load_dotenv(find_dotenv()) to locate the root .env automatically from any subfolder.

@@ -1,0 +1,6 @@
+langchain
+langchain-core
+langchain-openai
+langfuse>=3,<5
+python-dotenv
+ulid-py
